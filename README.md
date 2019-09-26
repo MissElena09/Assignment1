@@ -1,8 +1,8 @@
-#UNIX Assignment
+# UNIX Assignment
 
-##Data Inspection
+## Data Inspection
 
-###Attributes of fang_et_al_genotypes.txt
+### Attributes of fang_et_al_genotypes.txt
 
 ```
 here is my snippet of code used for data inspection:
@@ -30,7 +30,7 @@ By inspecting this file I learned that:
 2. This file has 986 columns
 3. File size = 6.1M
 
-###Attributes of snp_position.txt
+### Attributes of snp_position.txt
 
 ```
 here is my snippet of code used for data inspection:
@@ -58,7 +58,7 @@ By inspecting this file I learned that:
 2. This file has 15 columns
 3. File size = 38K
 
-##DATA PROCESSING
+## DATA PROCESSING
 ### Inspecting fang_et_al_genotypes.txt
 
 ```
@@ -66,7 +66,7 @@ $cut -f3 fang_et_al_genotypes.txt | sort| uniq
 ```
 This command is used to investigate how many different groups there are.
 
-###Data extraction
+### Data extraction
 ```
 $grep -E "(ZMMIL|ZMMLR|ZMMMR)" fang_et_al_genotypes.txt > maize_genotypes.txt
 ```
@@ -93,14 +93,14 @@ $mv header.txt maize_genotypes.txt
 this renames the header.txt to mainze_genotypes.txt
 
 the same was repeated for the teosinte_genotypes.txt
-###Checkpoint
+### Checkpoint
 ```
 $awk -F "\t" '{print NF; exit}' maize_genotypes.txt
 $awk -F "\t" '{print NF; exit}' teosinte_genotypes.txt
 ```
 checking the column number for maize_genotypes and teosinte_genotypes data
 
-###Extract columns
+### Extract columns
 ```
 $cut -f 3-986 maize_genotypes.txt > maize_genotypes_groupfirst.txt
 ```
@@ -116,7 +116,7 @@ $cut -f 1,3,4 snp_position.txt > snp_position_beforeJoin.txt
 ```
 Extract the snp_id, chromosome, nucleotide location column from the snp_position.txt
 
-###Transpose
+### Transpose
 ```
 $awk -f transpose.awk maize_genotypes_groupfirst.txt>transposed_maize_genotypes.txt
 ```
@@ -127,7 +127,7 @@ $awk -f transpose.awk teosinte_genotypes_groupfirst.txt > transposed_teosinte_ge
 ```
 transpose teosinte_genotypes_groupfirst.txt file
 
-###Sort files
+### Sort files
 
 ```
 $sort -k1,1 snp_position_beforeJoin.txt >sorted_snp_position.txt
@@ -143,7 +143,7 @@ $sort -k1,1 transposed_teosinte_genotypes.txt>sorted_teosinte_genotypes.txt
 
 sort the transposed_maize_genotypes.txt to sorted_maize_genotypes.txt, repeat for the transposed_teosinte_genotypes.txt by first column
 
-###Join files
+### Join files
 ```
 $join -1 1 -2 1 -t $'\t' sorted_snp_position.txt sorted_teosinte_genotypes.txt > sorted_joined_teosinte_genotypes.txt
 
@@ -153,7 +153,7 @@ $join -1 1 -2 1 -t $'\t' sorted_snp_position.txt sorted_maize_genotypes.txt > so
 
 join the files together(no header info) by first column(common column): snp_id
 
-###Sort files by increasing/decreasing position value
+### Sort files by increasing/decreasing position value
 **Use inverse grep to get rid of the multiple/unknown position**
 
 ```
@@ -178,7 +178,7 @@ $grep -v "multiple" sorted_joined_teosinte_genotypes.txt |grep -v "unknown" | so
 $grep -v "multiple" sorted_joined_teosinte_genotypes.txt |grep -v "unknown"| sort -k3,3r> decreasing_teosinte_genotypes.txt
 ```
 repeat for teosinte
-###Seperation of files
+### Seperation of files
 **chromosome number**
 ```
 $for i in {1..10}; do awk '$2=='$i'' increasing_maize_genotypes.txt|sort -k3,3n > maize/maize_chr"$i"_increasing.txt; done
@@ -211,7 +211,7 @@ $grep "unknown" sorted_joined_teosinte_genotypes.txt>teosinte/teosinte_unknown_p
 ```
 teosinte genotype file with all SNPs with unknown positions in the genome
 
-###Replace "?" by "-", Seperation of files 
+### Replace "?" by "-", Seperation of files 
 ```
 $sed 's/?/-/g' decreasing_maize_genotypes.txt> decreasing_maize_genotypes_replacedmissingvalue.txt
 ```
